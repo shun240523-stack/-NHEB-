@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>非人探査局 | NHEB 中央機密データベース</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700;900&family=IBM+Plex+Mono:wght@400;700&display=swap');
+
+        :root {
+            --nheb-bg: #fdfdfd;
+            --nheb-card: #ffffff;
+            --nheb-border: #e2e8f0;
+            --nheb-text: #0f172a;
+            --nheb-accent: #1d4ed8;
+            --nheb-complementary: #ffffff;
+            --nheb-muted: #64748b;
+            --nheb-panel: #ffffff;
+            /* アイコン用設定 */
+            --icon-bg: #1e293b;
+            --icon-stroke: #38bdf8;
+        }
+
+        .dark {
+            --nheb-bg: #020617;
+            --nheb-card: #0f172a;
+            --nheb-border: #1e293b;
+            --nheb-text: #f8fafc;
+            --nheb-accent: #38bdf8;
+            --nheb-complementary: #020617;
+            --nheb-muted: #94a3b8;
+            --nheb-panel: #020617;
+            --icon-bg: #f8fafc;
+            --icon-stroke: #1d4ed8;
+        }
+
+        body {
+            background-color: var(--nheb-bg);
+            color: var(--nheb-text);
+            font-family: 'Noto Sans JP', sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+            transition: background-color 0.4s ease, color 0.4s ease;
+        }
+
+        .mono { font-family: 'IBM Plex Mono', monospace; }
+
+        #webgl-canvas {
+            position: fixed; top: 0; left: 0; z-index: -1;
+            opacity: 0.15;
+        }
+
+        .glass-panel {
+            background: var(--nheb-card);
+            border: 1px solid var(--nheb-border);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        /* 水平タブ */
+        .tab-nav {
+            display: flex;
+            gap: 1.5rem;
+            border-bottom: 2px solid var(--nheb-border);
+            margin-bottom: 2rem;
+        }
+        .nav-btn {
+            padding: 1rem 0;
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--nheb-muted);
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s ease;
+        }
+        .nav-btn.active {
+            color: var(--nheb-accent);
+            border-bottom-color: var(--nheb-accent);
+        }
+
+        /* 視認性の高いアイコンボタン */
+        .icon-btn {
+            background-color: var(--icon-bg);
+            color: var(--icon-stroke);
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s ease, opacity 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .icon-btn:hover {
+            transform: scale(1.05);
+            opacity: 0.9;
+        }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.4s ease; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        #side-panel {
+            position: fixed; top: 0; right: -360px; width: 360px; height: 100%;
+            z-index: 1200; transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            background: var(--nheb-panel);
+            border-left: 1px solid var(--nheb-border);
+        }
+        #side-panel.open { right: 0; }
+
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(8px); z-index: 2000;
+            display: none; justify-content: center; align-items: center;
+        }
+        .modal-overlay.active { display: flex; }
+
+        /* 公開用レイアウトの最小化 */
+        body.view-public .app-container { display: none; }
+        body.view-public .public-container { display: block; }
+        .public-container { display: none; }
+    </style>
+</head>
+<body id="main-body">
+
+    <canvas id="webgl-canvas"></canvas>
+
+    <!-- LOADING -->
+    <div id="screen-loader" class="fixed inset-0 z-[3000] bg-[var(--nheb-bg)] flex flex-col items-center justify-center">
+        <div class="mono text-xs tracking-widest mb-4 opacity-40">INITIALIZING_SECURE_LINK</div>
+        <div class="w-64 h-[2px] bg-slate-200 dark:bg-slate-800 overflow-hidden">
+            <div id="loader-bar" class="h-full bg-[var(--nheb-accent)] w-0 transition-all duration-300"></div>
+        </div>
+    </div>
+
+    <!-- TITLE -->
+    <div id="screen-title" class="fixed inset-0 z-[2000] bg-[var(--nheb-bg)] flex flex-col items-center justify-center hidden">
+        <div class="text-center space-y-12">
+            <h1 class="text-7xl md:text-9xl font-black tracking-tighter">非人探査局</h1>
+            <p class="text-sm tracking-[0.8em] opacity-40 font-light mono">BUREAU OF NON-HUMAN EXPLORATION</p>
+            <button onclick="startAuth()" class="px-16 py-6 bg-[var(--nheb-text)] text-[var(--nheb-bg)] font-bold tracking-[0.3em] hover:opacity-80 transition-all text-sm">
+                SYSTEM_ACCESS
+            </button>
+        </div>
+    </div>
+
+    <!-- ABOUT MODAL -->
+    <div id="about-modal" class="modal-overlay" onclick="toggleAbout(false)">
+        <div class="glass-panel max-w-xl w-full p-12 rounded-3xl m-4" onclick="event.stopPropagation()">
+            <h2 class="text-4xl font-black mb-8 border-b border-slate-100 pb-6">非人探査局とは</h2>
+            <div class="space-y-6 text-sm leading-relaxed opacity-70">
+                <p>当局（NHEB）は、社会の中に混入した「非人間的実体」を観測・管理する専門機関です。</p>
+                <p>市民の皆様の安全を守るため、現実世界との整合性を維持し、論理的矛盾（アノマリー）を速やかに処理します。</p>
+                <div class="p-6 bg-red-50 dark:bg-red-900/10 border-l-4 border-red-500 text-red-700 dark:text-red-400 font-bold">
+                    警告：この内部データベースの内容を外部へ漏洩させる行為は、国家安全保障上の重大な犯罪とみなされます。
+                </div>
+            </div>
+            <button onclick="toggleAbout(false)" class="mt-10 w-full py-4 bg-[var(--nheb-accent)] text-[var(--nheb-complementary)] font-bold rounded-xl">了解した</button>
+        </div>
+    </div>
+
+    <!-- MAIN APP (ADMIN) -->
+    <div class="app-container min-h-screen p-4 md:p-12 opacity-0 transition-opacity duration-1000">
+        <header class="flex flex-col md:flex-row justify-between items-center mb-12 gap-8">
+            <div class="flex items-center gap-8">
+                <div class="w-16 h-16 bg-[var(--nheb-accent)] text-[var(--nheb-complementary)] flex items-center justify-center font-black text-3xl rounded-2xl shadow-xl">非</div>
+                <div>
+                    <div class="flex items-center gap-4">
+                        <h1 class="text-3xl font-black tracking-tighter">中央機密データベース</h1>
+                        <button onclick="toggleAbout(true)" class="p-2 text-slate-400 hover:text-[var(--nheb-accent)] transition-colors">
+                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </button>
+                    </div>
+                    <p class="text-xs font-bold opacity-40 uppercase tracking-[0.2em] mt-1">Status: Authorized_Clearance_Level_4</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-8">
+                <div class="text-right border-r pr-8 border-slate-200 dark:border-slate-800">
+                    <p class="mono text-3xl font-bold tracking-tighter" id="db-time">00:00:00</p>
+                    <p class="text-[9px] font-black opacity-30 uppercase tracking-widest">Global Synchronized</p>
+                </div>
+                <!-- 視認性を向上させた設定アイコン -->
+                <button onclick="togglePanel()" class="icon-btn" title="システム設定">
+                    <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="4" y1="21" x2="4" y2="14"></line>
+                        <line x1="4" y1="10" x2="4" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="12"></line>
+                        <line x1="12" y1="8" x2="12" y2="3"></line>
+                        <line x1="20" y1="21" x2="20" y2="16"></line>
+                        <line x1="20" y1="12" x2="20" y2="3"></line>
+                        <line x1="1" y1="14" x2="7" y2="14"></line>
+                        <line x1="9" y1="8" x2="15" y2="8"></line>
+                        <line x1="17" y1="16" x2="23" y2="16"></line>
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <main class="glass-panel p-10 rounded-[2.5rem] min-h-[60vh]">
+            <nav class="tab-nav">
+                <button onclick="switchTab('dashboard')" id="btn-dashboard" class="nav-btn active">概況</button>
+                <button onclick="switchTab('database')" id="btn-database" class="nav-btn">実態データベース</button>
+                <button onclick="switchTab('protocol')" id="btn-protocol" class="nav-btn">管理プロトコル</button>
+            </nav>
+
+            <!-- Dashboard -->
+            <section id="dashboard" class="tab-content active space-y-12">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="p-10 bg-slate-50 dark:bg-slate-900/50 rounded-3xl border border-slate-100 dark:border-slate-800">
+                        <h4 class="text-[10px] font-black opacity-40 mb-3 uppercase tracking-widest">現実整合性係数</h4>
+                        <p class="text-5xl mono font-bold text-[var(--nheb-accent)] tracking-tighter">0.99984</p>
+                    </div>
+                    <div class="p-10 bg-slate-50 dark:bg-slate-900/50 rounded-3xl border border-slate-100 dark:border-slate-800">
+                        <h4 class="text-[10px] font-black opacity-40 mb-3 uppercase tracking-widest">アクティブ・実態</h4>
+                        <p class="text-5xl mono font-bold tracking-tighter">1,424</p>
+                    </div>
+                    <div class="p-10 bg-emerald-500/5 dark:bg-emerald-500/10 rounded-3xl border border-emerald-500/20">
+                        <h4 class="text-[10px] font-black text-emerald-600 mb-3 uppercase tracking-widest">システム整合性</h4>
+                        <p class="text-5xl mono font-bold text-emerald-600 tracking-tighter">100%</p>
+                    </div>
+                </div>
+                <div class="space-y-6">
+                    <h4 class="text-[10px] font-black opacity-40 uppercase tracking-widest flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+                        リアルタイム・ログ
+                    </h4>
+                    <div id="live-logs" class="mono text-xs opacity-60 space-y-3 h-48 overflow-hidden font-medium"></div>
+                </div>
+            </section>
+
+            <!-- Archive -->
+            <section id="database" class="tab-content space-y-10">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm">
+                        <thead class="opacity-30 border-b border-slate-100 dark:border-slate-800">
+                            <tr>
+                                <th class="p-4 font-black text-[9px] uppercase tracking-widest">Index</th>
+                                <th class="p-4 font-black text-[9px] uppercase tracking-widest">Designation</th>
+                                <th class="p-4 font-black text-[9px] uppercase tracking-widest">Classification</th>
+                                <th class="p-4 font-black text-[9px] uppercase tracking-widest text-right">Integrity</th>
+                            </tr>
+                        </thead>
+                        <tbody id="db-body" class="divide-y divide-slate-50 dark:divide-slate-900"></tbody>
+                    </table>
+                </div>
+
+                <div id="detail-pane" class="hidden p-12 bg-slate-900/5 dark:bg-white/5 border-2 border-[var(--nheb-accent)]/20 rounded-[2rem] animate-in fade-in slide-in-from-bottom-6">
+                    <div class="flex justify-between items-start mb-8">
+                        <div>
+                            <span id="detail-id" class="mono text-xs font-bold text-[var(--nheb-accent)] opacity-60"></span>
+                            <h3 id="detail-title" class="text-4xl font-black mt-2"></h3>
+                        </div>
+                        <button onclick="closeDetails()" class="text-xs font-black opacity-30 hover:opacity-100 transition-opacity uppercase tracking-widest">[ Terminate_View ]</button>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                        <div class="space-y-8">
+                            <div>
+                                <h5 class="text-[9px] font-black opacity-30 uppercase mb-3 tracking-widest">調査現況</h5>
+                                <p id="detail-situation" class="text-lg font-bold leading-relaxed"></p>
+                            </div>
+                            <div>
+                                <h5 class="text-[9px] font-black opacity-30 uppercase mb-3 tracking-widest">機密プロフィール</h5>
+                                <p id="detail-desc" class="text-sm opacity-60 leading-loose"></p>
+                            </div>
+                        </div>
+                        <div class="bg-white dark:bg-slate-900 p-8 rounded-3xl border border-slate-100 dark:border-slate-800">
+                            <h5 class="text-[9px] font-black opacity-30 uppercase mb-6 tracking-widest">異常数値分析</h5>
+                            <ul id="detail-metrics" class="space-y-4 mono text-xs"></ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Protocol -->
+            <section id="protocol" class="tab-content">
+                <div class="max-w-2xl space-y-12 py-6">
+                    <div class="space-y-6">
+                        <h3 class="text-3xl font-black">基本指針第一条</h3>
+                        <p class="text-sm opacity-60 leading-loose">非人実態との直接的な情緒接触は、観測者の認知能力に恒久的な欠損を招く恐れがあります。すべての観測は論理フィルタ越しに行い、実態が提示する「意味」を無視してください。</p>
+                    </div>
+                    <div class="space-y-6">
+                        <h3 class="text-3xl font-black">基本指針第二条</h3>
+                        <p class="text-sm opacity-60 leading-loose">実態の物理的境界に干渉しないでください。実態の崩壊（デレズ）に巻き込まれた場合、救出は理論上不可能です。即座にセクターの封鎖を開始します。</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- SIDE PANEL -->
+    <div id="side-panel" class="p-10 flex flex-col shadow-2xl">
+        <div class="flex justify-between items-center mb-12 border-b border-slate-100 dark:border-slate-800 pb-6">
+            <h3 class="mono text-xs font-black opacity-40 tracking-tighter">CONFIGURATION_NODE</h3>
+            <button onclick="togglePanel()" class="text-3xl opacity-20 hover:opacity-100 transition-opacity">&times;</button>
+        </div>
+        <div class="space-y-12">
+            <div class="space-y-4">
+                <p class="text-[9px] font-black opacity-30 tracking-widest uppercase">表示モード切替</p>
+                <button onclick="toggleTheme()" class="w-full p-5 border-2 border-slate-200 dark:border-slate-800 rounded-2xl flex justify-between items-center font-bold">
+                    <span>視覚環境</span>
+                    <span id="theme-label" class="px-4 py-1.5 bg-[var(--nheb-accent)] text-[var(--nheb-complementary)] rounded-lg text-[10px]">LIGHT</span>
+                </button>
+            </div>
+            <div class="space-y-4">
+                <p class="text-[9px] font-black opacity-30 tracking-widest uppercase">アクセス権限</p>
+                <div class="grid grid-cols-2 gap-3">
+                    <button onclick="setViewMode('database')" class="p-4 border-2 border-slate-200 rounded-xl text-[10px] font-black hover:border-[var(--nheb-accent)] transition-all">ADMIN</button>
+                    <button onclick="setViewMode('public')" class="p-4 border-2 border-slate-200 rounded-xl text-[10px] font-black hover:border-[var(--nheb-accent)] transition-all">PUBLIC</button>
+                </div>
+            </div>
+        </div>
+        <div class="mt-auto pt-10 border-t border-slate-100 dark:border-slate-800">
+            <button onclick="location.reload()" class="w-full py-5 text-red-500 font-bold mono text-xs hover:bg-red-50 transition-colors rounded-xl">TERMINATE_CONNECTION</button>
+        </div>
+    </div>
+
+    <!-- PUBLIC WEBSITE (MINIMAL) -->
+    <div class="public-container min-h-screen bg-white text-slate-900">
+        <nav class="p-10 flex justify-between items-center border-b border-slate-50">
+            <h1 class="text-3xl font-black tracking-tighter">非人探査局</h1>
+            <button onclick="setViewMode('database')" class="text-[10px] font-black border-2 border-slate-900 px-6 py-3 hover:bg-slate-900 hover:text-white transition-all uppercase tracking-widest">Login</button>
+        </nav>
+        <div class="max-w-3xl mx-auto py-48 px-8 text-center space-y-16">
+            <div class="space-y-6">
+                <h2 class="text-6xl font-black leading-tight tracking-tighter">
+                    世界は、<br>
+                    <span class="text-blue-600 underline underline-offset-8 decoration-4">正しい。</span>
+                </h2>
+                <p class="text-lg opacity-40 font-light leading-relaxed">
+                    私たちは、日常の論理的整合性を守る公的機関です。<br>
+                    市民の安全は常に確保されています。
+                </p>
+            </div>
+            
+            <div class="pt-24 border-t border-slate-100">
+                <p class="text-[10px] mono opacity-30 font-bold tracking-[0.5em] mb-12">RESTRICTED_ARCHIVE_PREVIEW</p>
+                <div class="grid grid-cols-1 gap-4" id="public-records"></div>
+            </div>
+
+            <p class="text-[9px] opacity-20 mono pt-24">© 2026 BUREAU OF NON-HUMAN EXPLORATION. NO_UNAUTHORIZED_ACCESS.</p>
+        </div>
+    </div>
+
+    <script>
+        const ENTITIES = [
+            { id: 'E-0042', name: '空ろな事務員', class: '擬態', integrity: 'STABLE', situation: '会計事務所にて継続勤務。呼吸・瞬きなし。', desc: '周囲との共感能力が完全に欠損しているが、社会的評価は高い。食事は洗剤のみ。', metrics: ['心拍数: 0 bpm', '体温: 36.5C (固定)', '社会的信頼: 98%'] },
+            { id: 'L-1092', name: '信号機の思考', class: '論理', integrity: 'ANALYSIS', situation: '都市インフラから隔離完了。仮想対話中。', desc: '交通データから発生した意識体。全信号機を赤に固定することで、世界の「時間」を止めることを目的としている。', metrics: ['演算負荷: 99.8%', '起源: インフラネット', '階層: 第5'] },
+            { id: 'V-8821', name: '残像の配達員', class: '空間', integrity: 'TRACKING', situation: '深夜の住宅街に出没。不在票を投函。', desc: '彼が投函する荷物は「受取人が将来失う予定のもの」であり、受け取るとその未来が確定する。', metrics: ['最高速度: 140km/h', '不確定性: 82%', '出現数: 1'] },
+            { id: 'S-7703', name: '自動販売機の神', class: '静止', integrity: 'WATCHING', situation: '国道16号沿い。特定の自販機に宿る。', desc: '1964年の旧貨幣のみ受け付ける。排出される飲料は、飲用者の「最も後悔している記憶」を削除する。', metrics: ['稼働年数: 62年', '成分: 不明', '危険度: C'] },
+            { id: 'K-3033', name: '影の管理人', class: '潜伏', integrity: 'CAUTION', situation: '映画館「座席C-12」の影に生息。', desc: '人間の影を少しずつ「収穫」している。影を奪われた対象は徐々に物理的実体も薄れ、周囲の記憶から消失する。', metrics: ['照度: -600 lux', '犠牲者数: 推定12', '捕捉: 失敗'] },
+            { id: 'M-1210', name: '地下鉄の合唱団', class: '音響', integrity: 'DANGER', situation: '終電後のレール上にて発生。', desc: '何百人もの囁きが重なり、美しい少女の歌声として響く。聴取した職員は耳から結晶体を排出し死亡。', metrics: ['周波数: 7.83Hz', '共鳴率: 94%', '範囲: 300m'] },
+            { id: 'X-9901', name: '再編される家族', class: '浸食', integrity: 'ACTIVE', situation: '地方都市の一般家庭。', desc: '死亡した家族の代わりに「それ」が入り込み、以前より幸福な家庭を演じる。近隣住民も違和感を失っている。', metrics: ['浸食率: 88%', '論理整合: 100%', '警告: 接触禁止'] }
+        ];
+
+        function toggleAbout(show) { document.getElementById('about-modal').classList.toggle('active', show); }
+        function togglePanel() { document.getElementById('side-panel').classList.toggle('open'); }
+        function toggleTheme() {
+            const body = document.getElementById('main-body');
+            const label = document.getElementById('theme-label');
+            const isDark = body.classList.toggle('dark');
+            label.innerText = isDark ? "DARK" : "LIGHT";
+        }
+        function startAuth() {
+            document.getElementById('screen-title').classList.add('hidden');
+            document.querySelector('.app-container').classList.add('opacity-100');
+            initApp();
+        }
+        function runLoader() {
+            const bar = document.getElementById('loader-bar');
+            let p = 0;
+            const iv = setInterval(() => {
+                p += Math.random() * 25;
+                if (p >= 100) {
+                    p = 100;
+                    clearInterval(iv);
+                    setTimeout(() => {
+                        document.getElementById('screen-loader').classList.add('hidden');
+                        document.getElementById('screen-title').classList.remove('hidden');
+                    }, 500);
+                }
+                bar.style.width = p + '%';
+            }, 80);
+        }
+        function initApp() {
+            updateClock();
+            setInterval(updateClock, 1000);
+            renderDB();
+            setInterval(genLogs, 3000);
+        }
+        function updateClock() {
+            const n = new Date();
+            document.getElementById('db-time').innerText = n.toLocaleTimeString('ja-JP', { hour12: false });
+        }
+        function switchTab(id) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            document.getElementById(`btn-${id}`).classList.add('active');
+            if(id !== 'database') closeDetails();
+        }
+        function renderDB() {
+            const tb = document.getElementById('db-body');
+            tb.innerHTML = ENTITIES.map(e => `
+                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer transition-colors" onclick="showDetails('${e.id}')">
+                    <td class="p-5 mono font-bold text-[var(--nheb-accent)] text-xs">${e.id}</td>
+                    <td class="p-5 font-black text-sm">${e.name}</td>
+                    <td class="p-5 opacity-40 font-bold italic text-xs">${e.class}</td>
+                    <td class="p-5 text-right">
+                        <span class="px-2 py-1 rounded border border-current text-[10px] font-black uppercase tracking-widest">
+                            ${e.integrity}
+                        </span>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        function showDetails(id) {
+            const e = ENTITIES.find(x => x.id === id);
+            if(!e) return;
+            const pane = document.getElementById('detail-pane');
+            document.getElementById('detail-id').innerText = e.id;
+            document.getElementById('detail-title').innerText = e.name;
+            document.getElementById('detail-situation').innerText = e.situation;
+            document.getElementById('detail-desc').innerText = e.desc;
+            document.getElementById('detail-metrics').innerHTML = e.metrics.map(m => `
+                <li class="flex justify-between border-b border-slate-50 dark:border-slate-800 pb-2">
+                    <span class="opacity-30 uppercase text-[9px]">Analyzing</span>
+                    <span class="font-bold">${m}</span>
+                </li>
+            `).join('');
+            pane.classList.remove('hidden');
+            pane.scrollIntoView({ behavior: 'smooth', block: 'end' });
+        }
+        function closeDetails() { document.getElementById('detail-pane').classList.add('hidden'); }
+        function genLogs() {
+            const l = ["COGNITIVE_SHIELD_ACTIVE", "SCANNING_SECTOR_09...NONE", "RI_COEFFICIENT_STABLE", "NODE_PULSE_RECEIVED", "DATA_INTEGRITY_ACK", "ANOMALY_LOG_CLEARED"];
+            const c = document.getElementById('live-logs');
+            if(!c) return;
+            const div = document.createElement('div');
+            div.className = "flex gap-4 animate-in fade-in slide-in-from-left-2 duration-300";
+            div.innerHTML = `<span class="opacity-30 mono text-[9px]">[${new Date().toLocaleTimeString('ja-JP',{hour12:false})}]</span><span class="font-bold tracking-tighter">> ${l[Math.floor(Math.random()*l.length)]}</span>`;
+            c.prepend(div);
+            if(c.children.length > 8) c.lastChild.remove();
+        }
+        function setViewMode(m) {
+            const b = document.getElementById('main-body');
+            if(m === 'public') {
+                b.classList.add('view-public');
+                const pr = document.getElementById('public-records');
+                // 公開用はIDと警告のみの極小情報
+                pr.innerHTML = ENTITIES.slice(0, 3).map(e => `
+                    <div class="py-6 px-8 border-2 border-slate-100 rounded-2xl flex justify-between items-center bg-slate-50/30">
+                        <span class="mono text-xs font-black opacity-30">${e.id}</span>
+                        <span class="text-[9px] font-black text-blue-600 tracking-widest uppercase">CLASSIFIED_CASE</span>
+                        <div class="w-2 h-2 rounded-full bg-blue-600"></div>
+                    </div>
+                `).join('');
+            } else { b.classList.remove('view-public'); }
+            togglePanel();
+        }
+
+        let scene, camera, renderer, particles;
+        function initWebGL() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+            camera.position.z = 120;
+            renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('webgl-canvas'), alpha: true, antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            const pCount = 600;
+            const pGeometry = new THREE.BufferGeometry();
+            const pPos = new Float32Array(pCount * 3);
+            for(let i=0; i<pCount*3; i++) pPos[i] = (Math.random() - 0.5) * 400;
+            pGeometry.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+            particles = new THREE.Points(pGeometry, new THREE.PointsMaterial({ color: 0x1d4ed8, size: 1.8, transparent: true, opacity: 0.25 }));
+            scene.add(particles);
+            animate();
+        }
+        function animate() {
+            requestAnimationFrame(animate);
+            particles.rotation.y += 0.0004;
+            renderer.render(scene, camera);
+        }
+        window.addEventListener('load', () => { initWebGL(); runLoader(); });
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>
