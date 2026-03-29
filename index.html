@@ -20,7 +20,6 @@
             --nheb-panel: #ffffff;
             --icon-bg: #1e293b;
             --icon-stroke: #38bdf8;
-            /* 詳細パネル内のテキストカラー（白） */
             --detail-text-white: #ffffff;
         }
 
@@ -129,33 +128,15 @@
         .status-safe { background: #d1fae5; color: #065f46; border: 1px solid #34d399; }
         .status-neutral { background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; }
 
-        /* 詳細パネル（黒背景）内の文字色設定 */
+        /* 詳細パネル設定 */
         #detail-pane {
-            /* ライトモードでもダークモードでも、詳細パネルは黒に近い背景にする */
             background-color: #0f172a; 
             color: #ffffff;
         }
-
-        #detail-desc {
-            color: var(--detail-text-white);
-            font-weight: 400;
-            line-height: 1.8;
-        }
-
-        #detail-aftermath {
-            color: var(--detail-text-white);
-            opacity: 0.9;
-        }
-
-        #detail-situation {
-            color: #94a3b8; /* 少し落ち着いた色にしてコントラストをつける */
-        }
-        
-        .detail-label {
-            color: var(--nheb-accent);
-            opacity: 0.8;
-            font-weight: 900;
-        }
+        #detail-desc { color: var(--detail-text-white); font-weight: 400; line-height: 1.8; }
+        #detail-aftermath { color: var(--detail-text-white); opacity: 0.9; }
+        #detail-situation { color: #94a3b8; }
+        .detail-label { color: var(--nheb-accent); opacity: 0.8; font-weight: 900; }
     </style>
 </head>
 <body id="main-body">
@@ -181,13 +162,11 @@
                 <h1 class="text-7xl md:text-9xl font-black tracking-tighter">非人探査局</h1>
                 <p class="text-sm tracking-[0.8em] opacity-40 font-light mono uppercase">Bureau of Non-Human Exploration</p>
             </div>
-
             <div class="flex flex-col md:flex-row items-center justify-center gap-6 pt-10">
                 <button onclick="startAuth()" class="group relative px-12 py-5 bg-[var(--nheb-text)] text-[var(--nheb-bg)] font-bold tracking-[0.3em] hover:opacity-90 transition-all text-xs rounded-full overflow-hidden">
                     <span class="relative z-10">システム・アクセスを開始</span>
                     <div class="absolute inset-0 bg-[var(--nheb-accent)] translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
                 </button>
-                
                 <button onclick="toggleAbout(true)" class="px-12 py-5 border border-slate-200 dark:border-slate-800 font-bold tracking-[0.3em] hover:bg-slate-50 dark:hover:bg-slate-900 transition-all text-xs rounded-full">
                     組織説明を閲覧
                 </button>
@@ -204,22 +183,11 @@
                     非人探査局 (NHEB) とは
                 </h2>
                 <div class="space-y-6 text-sm leading-loose opacity-70">
-                    <p>
-                        本機関は、社会の中に静かに混入した「人間に見えるが人間ではないモノ」を見つけ出し、監視し、必要があれば片付けるための秘密組織です。
-                    </p>
-                    <p>
-                        私たちの隣にいる人が、本当に自分たちと同じ「人間」であるとは限りません。世界のあちこちで起きている「おかしなこと」を修正し、当たり前の毎日を守ること。それが私たちの仕事です。
-                    </p>
+                    <p>社会の中に静かに混入した「人間に見えるが人間ではないモノ」を監視・管理する秘密組織です。</p>
+                    <p>隣にいる人が本当に人間である保証はありません。私たちは世界のズレを修正し、日常を維持します。</p>
                 </div>
             </div>
-            <div class="bg-red-50 dark:bg-red-900/10 p-6 rounded-2xl border border-red-200 dark:border-red-900/40">
-                <p class="text-[11px] font-bold text-red-600 dark:text-red-400 leading-relaxed mono">
-                    ACCESS_WARNING: この情報はとても大切です。許可のない人が見ることは固く禁じられています。
-                </p>
-            </div>
-            <button onclick="toggleAbout(false)" class="w-full py-4 text-[10px] font-black opacity-30 hover:opacity-100 transition-opacity tracking-widest uppercase mt-4">
-                [ 閉じる ]
-            </button>
+            <button onclick="toggleAbout(false)" class="w-full py-4 text-[10px] font-black opacity-30 hover:opacity-100 transition-opacity tracking-widest uppercase">[ 閉じる ]</button>
         </div>
     </div>
 
@@ -238,7 +206,7 @@
                     <p class="mono text-3xl font-bold tracking-tighter" id="db-time">00:00:00</p>
                     <p class="text-[9px] font-black opacity-30 uppercase tracking-widest">Global Synchronized</p>
                 </div>
-                <button onclick="togglePanel()" class="icon-btn" title="システム設定">
+                <button onclick="togglePanel()" class="icon-btn">
                     <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line>
                         <line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line>
@@ -263,7 +231,7 @@
                     </div>
                     <div class="p-10 bg-slate-50 dark:bg-slate-900/50 rounded-3xl border border-slate-100 dark:border-slate-800">
                         <h4 class="text-[10px] font-black opacity-40 mb-3 uppercase tracking-widest">見守り中の対象</h4>
-                        <p class="text-5xl mono font-bold tracking-tighter">1,425</p>
+                        <p class="text-5xl mono font-bold tracking-tighter" id="total-count">0</p>
                     </div>
                     <div class="p-10 bg-emerald-500/5 dark:bg-emerald-500/10 rounded-3xl border border-emerald-500/20">
                         <h4 class="text-[10px] font-black text-emerald-600 mb-3 uppercase tracking-widest">システムの状態</h4>
@@ -293,7 +261,6 @@
                         <tbody id="db-body" class="divide-y divide-slate-50 dark:divide-slate-900"></tbody>
                     </table>
                 </div>
-                <!-- 詳細パネル：文字色を白に固定 -->
                 <div id="detail-pane" class="hidden p-12 border-2 border-[var(--nheb-accent)]/20 rounded-[2rem] animate-in fade-in slide-in-from-bottom-6 shadow-2xl">
                     <div class="flex justify-between items-start mb-8">
                         <div>
@@ -366,130 +333,41 @@
 
     <script>
         const ENTITIES = [
-            { 
-                id: 'B-2003', 
-                name: '人になりたいシマエナガ', 
-                class: '形態変異種', 
-                status: '逃走中', 
-                statusStyle: 'status-danger', 
-                situation: '地域調査中に都内アパートにて確認。', 
-                desc: '発見時には人の姿をしてアパートを借りて生活していた。確保前に黒い鳥の姿になり逃走。その後発見した羽の遺伝子を調べた結果普通のシマエナガと一致していた。', 
-                metrics: ['発見場所: 某アパート201号室', '接触時の形態: 20代女性', '逃走速度: 測定不能', '残留物: 黒い羽数点'],
-                aftermath: '現在は行方が完全にわからない。対象が借りていた部屋からは、大量の「人間に関する観察日記」と、使いかけのカメラ、そして「庭に小さな星を降らせる方法」と書かれた謎の手記が発見されている。'
-            },
-            { 
-                id: 'E-0042', 
-                name: '空っぽな事務員', 
-                class: '人間に化けている', 
-                status: '仕事中', 
-                statusStyle: 'status-warning', 
-                situation: '会計事務所で「ものすごく優秀な社員」として働いています。', 
-                desc: '見た目はどこにでもいる会社員ですが、お昼休みに洗剤を飲んだり、寝る代わりに一晩中壁を見つめたりしています。仕事は完璧にこなしますが、心がないようです。', 
-                metrics: ['心臓の音: 無し', '体温: ずっと36.5度', '信頼度: ほぼ完璧'],
-                aftermath: 'その後、誰にも気づかれずに「部長」に昇進しました。部下からは慕われていますが、彼と二人きりで残業した人は、なぜか自分の名前を忘れてしまうという噂が流れています。'
-            },
-            { 
-                id: 'L-1092', 
-                name: '信号機の考え', 
-                class: 'プログラムの異常', 
-                status: '閉じ込め中', 
-                statusStyle: 'status-safe', 
-                situation: 'インターネットの中の、誰にも見つからない場所に閉じ込めています。', 
-                desc: '街中の信号機を勝手に操作して、すべての道を同時に止めようとする、意思を持ったウイルスのようなものです。', 
-                metrics: ['動いている量: 99.8%', '生まれた場所: 街のネットワーク', '危なさ: 高い'],
-                aftermath: '閉じ込められたサーバーの中で、自分だけの「仮想の街」を作り上げました。今ではその街の信号機を1ミリの狂いもなく動かし続けることに満足しているようで、外の世界を襲う気配はなくなりました。'
-            },
-            { 
-                id: 'V-8821', 
-                name: '残像の配達員', 
-                class: '場所の異常', 
-                status: '追いかけ中', 
-                statusStyle: 'status-warning', 
-                situation: '夜中、住宅街をものすごいスピードで走っています。', 
-                desc: 'バイクで「不在票」を配って回る怪しい存在。その不在票を受け取ると、家の中から大切なものが一つ、こっそり消えてしまいます。', 
-                metrics: ['走る速さ: 時速140km', 'つかまえにくさ: 82%', '配った数: たくさん'],
-                aftermath: '最近、配っているものが「不在票」から「白紙の封筒」に変わりました。その封筒を受け取った家では、消えるはずの「大切なもの」の代わりに、「知らない誰かの思い出の品」が届くようになり、苦情と困惑が広がっています。'
-            },
-            { 
-                id: 'M-3301', 
-                name: '角のパン屋の老婆', 
-                class: '時間から外れた存在', 
-                status: '営業中', 
-                statusStyle: 'status-safe', 
-                situation: '30年前からずっと同じメニューのパンを売り続けています。', 
-                desc: '彼女のパンを食べた人は、一瞬だけ「子供の頃の夢」を思い出します。しかし、店の奥には小麦粉ではない「何か」が詰まった袋が山積みになっています。', 
-                metrics: ['まばたきの回数: 0回', '店内の気温: 10度固定', 'パンの味: 懐かしい'],
-                aftermath: '調査により、彼女は1994年に亡くなっていることが判明。現在の店は「パン屋の形をした記憶」そのものです。訪れる客が増えるたびに、街全体の1994年の記憶が少しずつ現実を上書きし始めています。'
-            },
-            { 
-                id: 'S-7742', 
-                name: '録音される足音', 
-                class: '音の異常', 
-                status: '増殖中', 
-                statusStyle: 'status-danger', 
-                situation: '深夜のラジオ放送のノイズに混じって現れます。', 
-                desc: '録音された足音を聞いてしまうと、その日から自分の後ろでも同じリズムの足音が聞こえるようになります。', 
-                metrics: ['音量: 徐々に大きくなる', '感染数: 142人', '距離: 2メートル'],
-                aftermath: '被害者が一箇所に集まることで音が重なり、「実体」が肉体を得ようとしています。現在、特定の周波数を流すことで、足音を「スキップ」のリズムに変える対策が進められており、被害は食い止められています。'
-            },
-            { 
-                id: 'F-0112', 
-                name: '影のない猫', 
-                class: '光の異常', 
-                status: '自由', 
-                statusStyle: 'status-neutral', 
-                situation: '都心の公園で見かけられます。', 
-                desc: '普通の猫に見えますが、地面に影がありません。この猫が横切った場所は、物理法則が少しだけゆるくなります。', 
-                metrics: ['重力の影響: 0.8g', '鳴き声: 逆再生', '撫で心地: 冷たい煙'],
-                aftermath: '猫が住み着いた公園では、子供たちが「空中浮遊」を楽しむようになりました。局はこのエリアを「実験場」として隔離し、住人たちには「健康増進のための最新設備」と説明して納得させています。'
-            },
-            { 
-                id: 'D-5509', 
-                name: '鏡の中の同居人', 
-                class: '反射の反乱', 
-                status: '静止', 
-                statusStyle: 'status-warning', 
-                situation: 'あるアパートの全ての鏡の中で、住人を見守っています。', 
-                desc: '住人が右手を挙げると、鏡の中の彼は左手を挙げますが、時々「間違えて」右手を使ってしまいます。', 
-                metrics: ['ズレの頻度: 1時間に1回', '視線の鋭さ: 強い', '住人の不安度: 80%'],
-                aftermath: '住人が引っ越した後、空室になった部屋の鏡には「誰もいないはずの部屋を掃除する影」が映り続けています。この部屋に入ると、鏡の中から自分自身に「おかえり」と言われる奇妙な現象が発生しています。'
-            },
-            { 
-                id: 'K-9981', 
-                name: '自動改札機の口', 
-                class: '機械の変異', 
-                status: '稼働', 
-                statusStyle: 'status-danger', 
-                situation: 'ターミナル駅の12番改札として紛れ込んでいます。', 
-                desc: '切符やICカードではなく、人の「指紋」や「声」を食べて情報を集めています。', 
-                metrics: ['通過人数: 毎日1万人', '蓄積データ: 膨大', '空腹度: 低い'],
-                aftermath: '改札機はあまりにも多くの個人情報を食べた結果、「自分は駅長だ」と思い込み始めました。深夜、誰もいない駅舎で、マイクを使って「自分自身の人生」についてのアナウンスを流しているのが確認されています。'
-            }
+            { id: 'B-2003', name: '人になりたいシマエナガ', class: '形態変異種', status: '逃走中', statusStyle: 'status-danger', situation: '地域調査中に都内アパートにて確認。', desc: '発見時には人の姿をして生活していた。確保前に黒い鳥の姿になり逃走。', metrics: ['接触時の形態: 20代男性', '残留物: 黒い羽数点'], aftermath: '現在は行方不明。部屋からは人間に関する観察日記が発見された。' },
+            { id: 'E-0042', name: '空っぽな事務員', class: '模倣型', status: '仕事中', statusStyle: 'status-warning', situation: '都内会計事務所に勤務。', desc: '見た目は普通の社員だが、昼休みに洗剤を飲む等の異常行動。', metrics: ['心拍: 0', '体温: 36.5度固定'], aftermath: '誰にも気づかれず部長に昇進。彼と残業した者は記憶の一部を失う。' },
+            { id: 'L-1092', name: '信号機の考え', class: '論理実体', status: '収容済', statusStyle: 'status-safe', situation: '閉鎖ネットワーク内に隔離。', desc: '街中の信号を操作し世界を停止させようとする意思。', metrics: ['活動量: 99.8%', '危険度: 高'], aftermath: '仮想の街で信号を動かすことに満足しており、外部への攻撃性は消失。' },
+            { id: 'V-8821', name: '残像の配達員', class: '時空異常', status: '追跡中', statusStyle: 'status-warning', situation: '深夜の住宅街に出没。', desc: 'バイクで不在票を配る怪異。受け取ると家から大切なものが消える。', metrics: ['最高速度: 140km/h', '実体化率: 15%'], aftermath: '不在票が白紙になり、代わりに他人の思い出の品が届くようになった。' },
+            { id: 'M-3301', name: '角のパン屋の老婆', class: '記憶残滓', status: '営業中', statusStyle: 'status-safe', situation: '30年前と同じメニューで営業。', desc: 'パンを食べると子供の頃の夢を思い出すが、店主は既に故人。', metrics: ['まばたき: 0', '店内温度: 10度'], aftermath: '街全体が1994年の記憶で上書きされ始めており、境界が曖昧。' },
+            { id: 'S-7742', name: '録音される足音', class: '音響感染', status: '警戒', statusStyle: 'status-danger', situation: '深夜ラジオのノイズに混入。', desc: '聞くと自分の後ろから足音が聞こえるようになる。', metrics: ['感染数: 142', '音圧: 上昇中'], aftermath: '被害者が集まり実体化の兆候。特定の周波数で中和作業中。' },
+            { id: 'F-0112', name: '影のない猫', class: '物理欠落', status: '自由', statusStyle: 'status-neutral', situation: '新宿御苑付近で目撃。', desc: '地面に影を落とさない猫。通過した場所は重力が歪む。', metrics: ['重力偏位: -0.2g', '体温: 測定不能'], aftermath: '付近を隔離実験場として確保。住民には最新設備と偽装。' },
+            { id: 'D-5509', name: '鏡の中の同居人', class: '反射生命', status: '観測', statusStyle: 'status-warning', situation: 'アパートの鏡内部に潜伏。', desc: '住人の動きを模倣するが、稀に左右を間違える。', metrics: ['ズレ頻度: 1回/時', '敵意: 低'], aftermath: '空室になっても影だけが残存。「おかえり」と喋るようになった。' },
+            { id: 'K-9981', name: '自動改札機の口', class: '無機変異', status: '稼働中', statusStyle: 'status-danger', situation: 'ターミナル駅12番改札。', desc: '切符ではなく人の指紋や声を「食べる」改札。', metrics: ['通過数: 1万人/日', '蓄積量: 膨大'], aftermath: '自分を駅長だと思い込み、深夜に人生相談のアナウンスを流す。' },
+            { id: 'T-0001', name: '夕暮れ時の「待って」', class: '聴覚現象', status: '未回収', statusStyle: 'status-danger', situation: '通学路の十字路にて。', desc: '背後から「待って」と声をかけられ、振り返ると時間が5秒戻る。', metrics: ['ループ回数: 推定10万', '被害者: 不明'], aftermath: '5秒のループに閉じ込められたまま、消滅した生徒が数名確認されている。' },
+            { id: 'P-4402', name: '雨の降らない傘', class: '概念反転', status: '保管', statusStyle: 'status-safe', situation: '遺失物センターにて回収。', desc: '開くと周囲3メートルの空気が乾燥し、水分子を分解する。', metrics: ['湿度: 0%', '放射線: 微量'], aftermath: '乾燥兵器としての転用を検討したが、使用者の喉が即座に裂けるため中止。' },
+            { id: 'X-9000', name: '顔のない自撮り', class: '電子浸食', status: '拡散', statusStyle: 'status-danger', situation: 'SNS上のハッシュタグに混入。', desc: 'この写真を保存すると、自分のスマホのアルバムから自分の顔が消える。', metrics: ['投稿数: 5,400', '削除成功率: 2%'], aftermath: '画像解析の結果、消えた顔はダークウェブで「パーツ」として転売されている。' },
+            { id: 'A-1101', name: '誰のものでもない鍵', class: '論理実体', status: '調査', statusStyle: 'status-neutral', situation: 'あらゆる鍵穴に適合する。', desc: 'この鍵で扉を開けると、そこは必ず「10年前の同じ場所」に繋がる。', metrics: ['適合率: 100%', '材質: 未知の合金'], aftermath: '過去改変の危険があるため、最深部金庫に封印。鍵穴自体を溶接。' },
+            { id: 'N-3333', name: 'ノイズのコンビニ', class: '空間置換', status: '消失', statusStyle: 'status-warning', situation: '深夜2時にのみ現れる店舗。', desc: '入店すると賞味期限が「西暦3000年」の商品しか置いていない。', metrics: ['店員: 無機質', '通貨: 使用不可'], aftermath: '店舗が突如消失。跡地には「2999年に会いましょう」というレシート。' },
+            { id: 'J-6671', name: '階段の14段目', class: '幾何学異常', status: '固定', statusStyle: 'status-safe', situation: '旧校舎の階段。', desc: '夜間にのみ現れる14段目を踏むと、足首から下が「石」に変わる。', metrics: ['硬度: ダイヤモンド並', '温度: 常温'], aftermath: '階段全体をコンクリートで埋め立て。付近は立入禁止区域。' },
+            { id: 'H-2210', name: '白い子供たちの遊び', class: '集団幻影', status: '移動', statusStyle: 'status-warning', situation: '霧の深い河川敷。', desc: '全身真っ白な子供たちが遊んでいる。近づくと霧とともに消える。', metrics: ['人数: 7人', '音響: 笑い声のみ'], aftermath: '彼らが遊んでいた場所には、1950年代の古びた玩具が必ず一点残される。' },
+            { id: 'Z-0000', name: '監視者', class: '根源実体', status: '不明', statusStyle: 'status-neutral', situation: '常にあなたの真後ろ。', desc: '決して振り返ることはできないが、常にそこに存在し、視線を感じる。', metrics: ['距離: 0.1mm', '視線強度: 最大'], aftermath: '局員全員がこの存在を感じているが、誰もその姿を確認したことがない。' }
         ];
 
         function togglePanel() { document.getElementById('side-panel').classList.toggle('open'); }
-        
         function toggleTheme() {
             const body = document.getElementById('main-body');
             const label = document.getElementById('theme-label');
             const isDark = body.classList.toggle('dark');
             label.innerText = isDark ? "DARK" : "LIGHT";
         }
-
         function toggleAbout(show) {
             const modal = document.getElementById('modal-about');
             if (show) modal.classList.add('active');
             else modal.classList.remove('active');
         }
-
         function runLoader() {
             const bar = document.getElementById('loader-bar');
-            const text = document.getElementById('loader-text');
             const loader = document.getElementById('screen-loader');
-            const messages = ["Connecting_NHEB_Mainframe", "Auth_Secure_Link", "Sync_Database", "Complete"];
             let p = 0;
-            let msgIdx = 0;
-
             const iv = setInterval(() => {
                 p += Math.random() * 5;
                 if (p >= 100) {
@@ -504,13 +382,8 @@
                     }, 400);
                 }
                 bar.style.width = p + '%';
-                if (p > (msgIdx + 1) * 25 && msgIdx < messages.length - 1) {
-                    msgIdx++;
-                    text.innerText = messages[msgIdx];
-                }
             }, 30);
         }
-
         function startAuth() {
             document.getElementById('screen-title').classList.add('hidden');
             const app = document.querySelector('.app-container');
@@ -518,7 +391,6 @@
             setTimeout(() => app.classList.add('opacity-100'), 50);
             initApp();
         }
-
         function backToTitle() {
             const app = document.querySelector('.app-container');
             app.classList.remove('opacity-100');
@@ -528,20 +400,17 @@
                 document.getElementById('screen-title').classList.remove('hidden');
             }, 800);
         }
-
         function initApp() {
             updateClock();
             if(!window.clockInterval) window.clockInterval = setInterval(updateClock, 1000);
             renderDB();
+            document.getElementById('total-count').innerText = ENTITIES.length.toLocaleString();
             if(!window.logInterval) window.logInterval = setInterval(genLogs, 3000);
         }
-
         function updateClock() {
-            const n = new Date();
             const el = document.getElementById('db-time');
-            if(el) el.innerText = n.toLocaleTimeString('ja-JP', { hour12: false });
+            if(el) el.innerText = new Date().toLocaleTimeString('ja-JP', { hour12: false });
         }
-
         function switchTab(id) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -549,7 +418,6 @@
             document.getElementById(`btn-${id}`).classList.add('active');
             if(id !== 'database') closeDetails();
         }
-
         function renderDB() {
             const tb = document.getElementById('db-body');
             tb.innerHTML = ENTITIES.map(e => `
@@ -563,7 +431,6 @@
                 </tr>
             `).join('');
         }
-
         function showDetails(id) {
             const e = ENTITIES.find(x => x.id === id);
             if(!e) return;
@@ -583,11 +450,9 @@
             pane.classList.remove('hidden');
             pane.scrollIntoView({ behavior: 'smooth', block: 'end' });
         }
-
         function closeDetails() { document.getElementById('detail-pane').classList.add('hidden'); }
-
         function genLogs() {
-            const l = ["システム安定中", "対象B-2003を再スキャン", "世界のズレはありません", "データを更新しました", "アパート201号室付近を監視中", "新規対象K-9981を検知", "警告: 記録されていない羽を検出"];
+            const l = ["システム安定", "対象再スキャン中", "世界のズレは許容範囲内", "ログを保存", "警告: 深夜の改札に異常検知", "新宿エリアの監視強化", "新規実体を登録"];
             const c = document.getElementById('live-logs');
             if(!c) return;
             const div = document.createElement('div');
@@ -596,8 +461,6 @@
             c.prepend(div);
             if(c.children.length > 8) c.lastChild.remove();
         }
-
-        // WebGL background
         let scene, camera, renderer, particles;
         function initWebGL() {
             scene = new THREE.Scene();
@@ -619,12 +482,7 @@
             particles.rotation.y += 0.0004;
             renderer.render(scene, camera);
         }
-
-        window.onload = function() {
-            initWebGL();
-            runLoader();
-        };
-
+        window.onload = function() { initWebGL(); runLoader(); };
         window.addEventListener('resize', () => {
             if(camera && renderer) {
                 camera.aspect = window.innerWidth / window.innerHeight;
