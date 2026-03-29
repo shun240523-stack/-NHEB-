@@ -30,7 +30,7 @@
             --nheb-accent: #38bdf8;
             --nheb-complementary: #020617;
             --nheb-muted: #94a3b8;
-            --nheb-panel: #020617;
+            --nheb-panel: #ffffff;
             --icon-bg: #f8fafc;
             --icon-stroke: #1d4ed8;
         }
@@ -174,16 +174,16 @@
                 </h2>
                 <div class="space-y-6 text-sm leading-loose opacity-70">
                     <p>
-                        本機関は、社会の中に静かに混入した「人間に見えるが人間ではないモノ（実態）」を観測・管理、および必要に応じた処分を行うための国家機密機関です。
+                        本機関は、社会の中に静かに混入した「人間に見えるが人間ではないモノ」を見つけ出し、監視し、必要があれば片付けるための秘密組織です。
                     </p>
                     <p>
-                        私たちの隣人が、必ずしも私たちと同じ生命であるとは限りません。世界の論理的矛盾を検知し、日常の整合性を維持すること。それが当局に課せられた唯一の使命です。
+                        私たちの隣にいる人が、本当に自分たちと同じ「人間」であるとは限りません。世界のあちこちで起きている「おかしなこと」を修正し、当たり前の毎日を守ること。それが私たちの仕事です。
                     </p>
                 </div>
             </div>
             <div class="bg-red-50 dark:bg-red-900/10 p-6 rounded-2xl border border-red-200 dark:border-red-900/40">
                 <p class="text-[11px] font-bold text-red-600 dark:text-red-400 leading-relaxed mono">
-                    ACCESS_WARNING: 本データはレベル4以上の権限を要します。未許可の閲覧は処罰の対象となります。
+                    ACCESS_WARNING: この情報はとても大切です。許可のない人が見ることは固く禁じられています。
                 </p>
             </div>
             <button onclick="toggleAbout(false)" class="w-full py-4 text-[10px] font-black opacity-30 hover:opacity-100 transition-opacity tracking-widest uppercase mt-4">
@@ -199,7 +199,7 @@
                 <div class="w-16 h-16 bg-[var(--nheb-accent)] text-[var(--nheb-complementary)] flex items-center justify-center font-black text-3xl rounded-2xl shadow-xl">非</div>
                 <div>
                     <h1 class="text-3xl font-black tracking-tighter">中央機密データベース</h1>
-                    <p class="text-xs font-bold opacity-40 uppercase tracking-[0.2em] mt-1">Status: Authorized_Clearance_Level_4</p>
+                    <p class="text-xs font-bold opacity-40 uppercase tracking-[0.2em] mt-1">Status: データ閲覧許可済み</p>
                 </div>
             </div>
             <div class="flex items-center gap-8">
@@ -227,22 +227,22 @@
             <section id="dashboard" class="tab-content active space-y-12">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                     <div class="p-10 bg-slate-50 dark:bg-slate-900/50 rounded-3xl border border-slate-100 dark:border-slate-800">
-                        <h4 class="text-[10px] font-black opacity-40 mb-3 uppercase tracking-widest">不整合係数</h4>
+                        <h4 class="text-[10px] font-black opacity-40 mb-3 uppercase tracking-widest">世界のズレ具合</h4>
                         <p class="text-5xl mono font-bold text-[var(--nheb-accent)] tracking-tighter">0.99984</p>
                     </div>
                     <div class="p-10 bg-slate-50 dark:bg-slate-900/50 rounded-3xl border border-slate-100 dark:border-slate-800">
-                        <h4 class="text-[10px] font-black opacity-40 mb-3 uppercase tracking-widest">追跡中オブジェクト</h4>
+                        <h4 class="text-[10px] font-black opacity-40 mb-3 uppercase tracking-widest">見守り中の対象</h4>
                         <p class="text-5xl mono font-bold tracking-tighter">1,424</p>
                     </div>
                     <div class="p-10 bg-emerald-500/5 dark:bg-emerald-500/10 rounded-3xl border border-emerald-500/20">
-                        <h4 class="text-[10px] font-black text-emerald-600 mb-3 uppercase tracking-widest">メインフレーム</h4>
-                        <p class="text-5xl mono font-bold text-emerald-600 tracking-tighter">NORMAL</p>
+                        <h4 class="text-[10px] font-black text-emerald-600 mb-3 uppercase tracking-widest">システムの状態</h4>
+                        <p class="text-5xl mono font-bold text-emerald-600 tracking-tighter">安定</p>
                     </div>
                 </div>
                 <div class="space-y-6">
                     <h4 class="text-[10px] font-black opacity-40 uppercase tracking-widest flex items-center gap-2">
                         <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
-                        LIVE LOG
+                        リアルタイム通信
                     </h4>
                     <div id="live-logs" class="mono text-xs opacity-60 space-y-3 h-48 overflow-hidden font-medium"></div>
                 </div>
@@ -254,9 +254,9 @@
                         <thead class="opacity-30 border-b border-slate-100 dark:border-slate-800">
                             <tr>
                                 <th class="p-4 font-black text-[9px] uppercase tracking-widest">ID</th>
-                                <th class="p-4 font-black text-[9px] uppercase tracking-widest">TITLE</th>
-                                <th class="p-4 font-black text-[9px] uppercase tracking-widest">CLASS</th>
-                                <th class="p-4 font-black text-[9px] uppercase tracking-widest text-right">STATUS</th>
+                                <th class="p-4 font-black text-[9px] uppercase tracking-widest">名前（仮）</th>
+                                <th class="p-4 font-black text-[9px] uppercase tracking-widest">タイプ</th>
+                                <th class="p-4 font-black text-[9px] uppercase tracking-widest text-right">現在の状態</th>
                             </tr>
                         </thead>
                         <tbody id="db-body" class="divide-y divide-slate-50 dark:divide-slate-900"></tbody>
@@ -268,22 +268,26 @@
                             <span id="detail-id" class="mono text-xs font-bold text-[var(--nheb-accent)] opacity-60"></span>
                             <h3 id="detail-title" class="text-4xl font-black mt-2"></h3>
                         </div>
-                        <button onclick="closeDetails()" class="text-xs font-black opacity-30 hover:opacity-100 transition-opacity uppercase tracking-widest">[ Close ]</button>
+                        <button onclick="closeDetails()" class="text-xs font-black opacity-30 hover:opacity-100 transition-opacity uppercase tracking-widest">[ 閉じる ]</button>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
                         <div class="space-y-8">
                             <div>
-                                <h5 class="text-[9px] font-black opacity-30 uppercase mb-3 tracking-widest">Observation</h5>
+                                <h5 class="text-[9px] font-black opacity-30 uppercase mb-3 tracking-widest">最新の観測状況</h5>
                                 <p id="detail-status-text" class="text-lg font-bold text-blue-600 mb-2"></p>
                                 <p id="detail-situation" class="text-sm font-bold opacity-80"></p>
                             </div>
                             <div>
-                                <h5 class="text-[9px] font-black opacity-30 uppercase mb-3 tracking-widest">Description</h5>
+                                <h5 class="text-[9px] font-black opacity-30 uppercase mb-3 tracking-widest">詳しい内容</h5>
                                 <p id="detail-desc" class="text-sm opacity-60 leading-loose"></p>
+                            </div>
+                            <div class="p-6 bg-[var(--nheb-accent)]/5 rounded-2xl border-l-4 border-[var(--nheb-accent)]">
+                                <h5 class="text-[9px] font-black text-[var(--nheb-accent)] uppercase mb-2 tracking-widest">その後の報告</h5>
+                                <p id="detail-aftermath" class="text-sm font-medium leading-relaxed"></p>
                             </div>
                         </div>
                         <div class="bg-white dark:bg-slate-900 p-8 rounded-3xl border border-slate-100 dark:border-slate-800">
-                            <h5 class="text-[9px] font-black opacity-30 uppercase mb-6 tracking-widest">Telemetry Data</h5>
+                            <h5 class="text-[9px] font-black opacity-30 uppercase mb-6 tracking-widest">記録されている数値</h5>
                             <ul id="detail-metrics" class="space-y-4 mono text-xs"></ul>
                         </div>
                     </div>
@@ -292,14 +296,14 @@
 
             <section id="protocol" class="tab-content">
                 <div class="max-w-2xl space-y-12 py-6 opacity-60">
-                    <p class="text-xs font-bold tracking-widest text-[var(--nheb-accent)]">接触禁止プロトコル ver 2.01</p>
+                    <p class="text-xs font-bold tracking-widest text-[var(--nheb-accent)]">接触禁止のルール ver 2.01</p>
                     <div class="space-y-6 text-sm">
-                        <h3 class="text-3xl font-black">第1条：非干渉の維持</h3>
-                        <p class="leading-loose">実態が物理的な矛盾を露呈させても、それを指摘してはならない。観測されていると認識された実態は、即座に不確定性を増大させ、周囲を巻き込んで消滅する恐れがある。</p>
+                        <h3 class="text-3xl font-black">1. そっとしておくこと</h3>
+                        <p class="leading-loose">「人間じゃない」ことがバレバレな動きをしても、指摘してはいけません。「見られている」と気づくと、彼らはパニックを起こして消えたり、周りを巻き込んで壊したりするからです。</p>
                     </div>
                     <div class="space-y-6 text-sm">
-                        <h3 class="text-3xl font-black">第2条：境界線の死守</h3>
-                        <p class="leading-loose">実態との間に物理的な接触を持ってはならない。影や衣服の接触すらも回避すべきである。彼らは「空洞」であり、触れることは自らの整合性を引き渡すことと同義である。</p>
+                        <h3 class="text-3xl font-black">2. 触れないこと</h3>
+                        <p class="leading-loose">絶対に体に触れてはいけません。服や影が重なるのもダメです。彼らの中身は「空っぽ」なので、触れると自分の心が吸い込まれてしまうかもしれません。</p>
                     </div>
                 </div>
             </section>
@@ -316,7 +320,7 @@
             <div class="space-y-4">
                 <p class="text-[9px] font-black opacity-30 tracking-widest uppercase">Visual Theme</p>
                 <button onclick="toggleTheme()" class="w-full p-5 border-2 border-slate-200 dark:border-slate-800 rounded-2xl flex justify-between items-center font-bold">
-                    <span class="text-xs">テーマ変更</span>
+                    <span class="text-xs">明るさを変える</span>
                     <span id="theme-label" class="px-4 py-1.5 bg-[var(--nheb-accent)] text-[var(--nheb-complementary)] rounded-lg text-[9px] mono">LIGHT</span>
                 </button>
             </div>
@@ -330,9 +334,94 @@
 
     <script>
         const ENTITIES = [
-            { id: 'E-0042', name: '空ろな事務員', class: '人間擬態', status: '擬態中', statusStyle: 'status-warning', situation: '会計事務所で「完璧な社員」として勤務中。', desc: '見た目は普通の人間ですが、食事の代わりに洗剤を飲み、寝る代わりに壁を眺めています。仕事は完璧ですが、心が存在しません。', metrics: ['心拍数: 0 bpm', '体温: 36.5C (固定)', '社会的信頼: 98%'] },
-            { id: 'L-1092', name: '信号機の思考', class: '論理異常', status: '収容済み', statusStyle: 'status-safe', situation: 'インターネットの隔離サーバーに封印。', desc: '街中の信号機をハックして、すべての交通を同時に止めようとする意識を持ったプログラムです。', metrics: ['演算負荷: 99.8%', '起源: インフラネット', '危険度: A'] },
-            { id: 'V-8821', name: '残像の配達員', class: '空間異常', status: '追跡中', statusStyle: 'status-warning', situation: '深夜、住宅街を時速140kmで走行中。', desc: 'バイクで不在票を配る怪人。その不在票を受け取ると、家から「大切なもの」が一つ消えます。', metrics: ['最高速度: 140km/h', '不確定性: 82%', '配達数: 1'] }
+            { 
+                id: 'E-0042', 
+                name: '空っぽな事務員', 
+                class: '人間に化けている', 
+                status: '仕事中', 
+                statusStyle: 'status-warning', 
+                situation: '会計事務所で「ものすごく優秀な社員」として働いています。', 
+                desc: '見た目はどこにでもいる会社員ですが、お昼休みに洗剤を飲んだり、寝る代わりに一晩中壁を見つめたりしています。仕事は完璧にこなしますが、心がないようです。', 
+                metrics: ['心臓の音: 無し', '体温: ずっと36.5度', '信頼度: ほぼ完璧'],
+                aftermath: 'その後、誰にも気づかれずに「部長」に昇進しました。部下からは慕われていますが、彼と二人きりで残業した人は、なぜか自分の名前を忘れてしまうという噂が流れています。'
+            },
+            { 
+                id: 'L-1092', 
+                name: '信号機の考え', 
+                class: 'プログラムの異常', 
+                status: '閉じ込め中', 
+                statusStyle: 'status-safe', 
+                situation: 'インターネットの中の、誰にも見つからない場所に閉じ込めています。', 
+                desc: '街中の信号機を勝手に操作して、すべての道を同時に止めようとする、意思を持ったウイルスのようなものです。', 
+                metrics: ['動いている量: 99.8%', '生まれた場所: 街のネットワーク', '危なさ: 高い'],
+                aftermath: '閉じ込められたサーバーの中で、自分だけの「仮想の街」を作り上げました。今ではその街の信号機を1ミリの狂いもなく動かし続けることに満足しているようで、外の世界を襲う気配はなくなりました。'
+            },
+            { 
+                id: 'V-8821', 
+                name: '残像の配達員', 
+                class: '場所の異常', 
+                status: '追いかけ中', 
+                statusStyle: 'status-warning', 
+                situation: '夜中、住宅街をものすごいスピードで走っています。', 
+                desc: 'バイクで「不在票」を配って回る怪しい存在。その不在票を受け取ると、家の中から大切なものが一つ、こっそり消えてしまいます。', 
+                metrics: ['走る速さ: 時速140km', 'つかまえにくさ: 82%', '配った数: たくさん'],
+                aftermath: '最近、配っているものが「不在票」から「白紙の封筒」に変わりました。その封筒を受け取った家では、消えるはずの「大切なもの」の代わりに、「知らない誰かの思い出の品」が届くようになり、苦情と困惑が広がっています。'
+            },
+            { 
+                id: 'M-3301', 
+                name: '角のパン屋の老婆', 
+                class: '時間から外れた存在', 
+                status: '営業中', 
+                statusStyle: 'status-safe', 
+                situation: '30年前からずっと同じメニューのパンを売り続けています。', 
+                desc: '彼女のパンを食べた人は、一瞬だけ「子供の頃の夢」を思い出します。しかし、店の奥には小麦粉ではない「何か」が詰まった袋が山積みになっています。', 
+                metrics: ['まばたきの回数: 0回', '店内の気温: 10度固定', 'パンの味: 懐かしい'],
+                aftermath: '調査により、彼女は1994年に亡くなっていることが判明。現在の店は「パン屋の形をした記憶」そのものです。訪れる客が増えるたびに、街全体の1994年の記憶が少しずつ現実を上書きし始めています。'
+            },
+            { 
+                id: 'S-7742', 
+                name: '録音される足音', 
+                class: '音の異常', 
+                status: '増殖中', 
+                statusStyle: 'status-danger', 
+                situation: '深夜のラジオ放送のノイズに混じって現れます。', 
+                desc: '録音された足音を聞いてしまうと、その日から自分の後ろでも同じリズムの足音が聞こえるようになります。', 
+                metrics: ['音量: 徐々に大きくなる', '感染数: 142人', '距離: 2メートル'],
+                aftermath: '被害者が一箇所に集まることで音が重なり、「実体」が肉体を得ようとしています。現在、特定の周波数を流すことで、足音を「スキップ」のリズムに変える対策が進められており、被害は食い止められています。'
+            },
+            { 
+                id: 'F-0112', 
+                name: '影のない猫', 
+                class: '光の異常', 
+                status: '自由', 
+                statusStyle: 'status-neutral', 
+                situation: '都心の公園で見かけられます。', 
+                desc: '普通の猫に見えますが、地面に影がありません。この猫が横切った場所は、物理法則が少しだけゆるくなります。', 
+                metrics: ['重力の影響: 0.8g', '鳴き声: 逆再生', '撫で心地: 冷たい煙'],
+                aftermath: '猫が住み着いた公園では、子供たちが「空中浮遊」を楽しむようになりました。局はこのエリアを「実験場」として隔離し、住人たちには「健康増進のための最新設備」と説明して納得させています。'
+            },
+            { 
+                id: 'D-5509', 
+                name: '鏡の中の同居人', 
+                class: '反射の反乱', 
+                status: '静止', 
+                statusStyle: 'status-warning', 
+                situation: 'あるアパートの全ての鏡の中で、住人を見守っています。', 
+                desc: '住人が右手を挙げると、鏡の中の彼は左手を挙げますが、時々「間違えて」右手を使ってしまいます。', 
+                metrics: ['ズレの頻度: 1時間に1回', '視線の鋭さ: 強い', '住人の不安度: 80%'],
+                aftermath: '住人が引っ越した後、空室になった部屋の鏡には「誰もいないはずの部屋を掃除する影」が映り続けています。この部屋に入ると、鏡の中から自分自身に「おかえり」と言われる奇妙な現象が発生しています。'
+            },
+            { 
+                id: 'K-9981', 
+                name: '自動改札機の口', 
+                class: '機械の変異', 
+                status: '稼働', 
+                statusStyle: 'status-danger', 
+                situation: 'ターミナル駅の12番改札として紛れ込んでいます。', 
+                desc: '切符やICカードではなく、人の「指紋」や「声」を食べて情報を集めています。', 
+                metrics: ['通過人数: 毎日1万人', '蓄積データ: 膨大', '空腹度: 低い'],
+                aftermath: '改札機はあまりにも多くの個人情報を食べた結果、「自分は駅長だ」と思い込み始めました。深夜、誰もいない駅舎で、マイクを使って「自分自身の人生」についてのアナウンスを流しているのが確認されています。'
+            }
         ];
 
         function togglePanel() { document.getElementById('side-panel').classList.toggle('open'); }
@@ -441,9 +530,10 @@
             document.getElementById('detail-status-text').innerText = e.status;
             document.getElementById('detail-situation').innerText = e.situation;
             document.getElementById('detail-desc').innerText = e.desc;
+            document.getElementById('detail-aftermath').innerText = e.aftermath;
             document.getElementById('detail-metrics').innerHTML = e.metrics.map(m => `
                 <li class="flex justify-between border-b border-slate-100 dark:border-slate-800 pb-2">
-                    <span class="opacity-30 uppercase text-[9px] mono">Data</span>
+                    <span class="opacity-30 uppercase text-[9px] mono">記録データ</span>
                     <span class="font-bold">${m}</span>
                 </li>
             `).join('');
@@ -454,7 +544,7 @@
         function closeDetails() { document.getElementById('detail-pane').classList.add('hidden'); }
 
         function genLogs() {
-            const l = ["Shield_Stable", "Object_E0042_Pinged", "Entropy_Normal", "Database_Synced", "Scanning_Shinjuku_District"];
+            const l = ["システム安定中", "対象E-0042を確認", "世界のズレはありません", "データを更新しました", "新宿エリアをスキャン中", "新規対象K-9981を検知", "警告: 記録されていない足音を検出"];
             const c = document.getElementById('live-logs');
             if(!c) return;
             const div = document.createElement('div');
